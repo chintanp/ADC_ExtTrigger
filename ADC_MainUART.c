@@ -28,7 +28,7 @@
 
 // input signal connected to PE2/AIN1
 
-#include "ADCSWTrigger.h"
+#include "ADC_ExternalTrigger.h"
 #include "tm4c123gh6pm.h"
 #include "PLL.h"
 #include "UART.h"
@@ -42,6 +42,8 @@ void WaitForInterrupt(void);  // low power mode
 
 volatile unsigned long ADCvalue;
 unsigned char str_ADCvalue[10];				// Handles the ADC value in string format
+unsigned long SW1; 										// For reading the value of PE1
+
 // The digital number ADCvalue is a representation of the voltage on PE4 
 // voltage  ADCvalue
 // 0.00V     0
@@ -52,8 +54,11 @@ unsigned char str_ADCvalue[10];				// Handles the ADC value in string format
 int main(void){unsigned long volatile delay;
   PLL_Init();                           // 80 MHz
 	UART_Init();                          // initialize UART ****Added new****
-  ADC0_InitSWTriggerSeq3_Ch1();         // ADC initialization PE2/AIN1
-  SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOF; // activate port F
+  ADC0_InitExtTriggerSeq3_Ch1();         // ADC initialization PE2/AIN1
+  
+	// Old code - not necessary now
+	/*
+	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOF; // activate port F
   delay = SYSCTL_RCGC2_R;
   GPIO_PORTF_DIR_R |= 0x04;             // make PF2 out (built-in LED)
   GPIO_PORTF_AFSEL_R &= ~0x04;          // disable alt funct on PF2
@@ -61,23 +66,33 @@ int main(void){unsigned long volatile delay;
                                         // configure PF2 as GPIO
   GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF0FF)+0x00000000;
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
+	*/
 	
+	// New code 
 	//Print something on the UART
 	UART_OutString("Value from the ADC");
 	
   while(1){
-    //GPIO_PORTF_DATA_R |= 0x04;          // profile
-    ADCvalue = ADC0_InSeq3();
+    
+		// Old code
+		//GPIO_PORTF_DATA_R |= 0x04;          // profile
 		
+		// New code
+		SW1 = GPIO_PORTE_DATA_R&0x02;			// read PE1 into SW1
+		
+		// *** main logic for external trigger ***
+		// Only sample when the switch is pressed 
+		if(SW1) {
+			ADCvalue = ADC0_InSeq3();
+		}
+				
 		// Convert long to a string
 		sprintf(str_ADCvalue, "%d", ADCvalue);
 		
 		// Now send the stringified ADC value to UART
 		UART_OutString(str_ADCvalue);
 		UART_OutString("\n");
-		for(delay=0; delay<100000; delay++){};
-			for(delay=0; delay<100000; delay++){};
-				for(delay=0; delay<100000; delay++){};
+		
     //GPIO_PORTF_DATA_R &= ~0x04;
     for(delay=0; delay<100000; delay++){};
   }

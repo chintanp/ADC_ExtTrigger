@@ -1,4 +1,8 @@
-// ADCSWTrigger.h
+// ADC_ExternalTrigger.h 
+// ADC triggered on external GPIO 
+
+
+// Derived from ADCSWTrigger.h
 // Runs on LM4F120/TM4C123
 // Provide functions that initialize ADC0 SS3 to be triggered by
 // software and trigger a conversion, wait for it to finish,
@@ -31,10 +35,11 @@
 // Sequencer 1 priority: 2nd
 // Sequencer 2 priority: 3rd
 // Sequencer 3 priority: 4th (lowest)
-// SS3 triggering event: software trigger
+// SS3 triggering event: software trigger - ***** changed to external GPIO *****
 // SS3 1st sample source: Ain1 (PE2)
 // SS3 interrupts: flag set on completion but no interrupt requested
-void ADC0_InitSWTriggerSeq3_Ch1(void);
+// void ADC0_InitSWTriggerSeq3_Ch1(void); // Function name changed to ext trigger
+void ADC0_InitExtTriggerSeq3_Ch1(void);
 
 
 //------------ADC0_InSeq3------------

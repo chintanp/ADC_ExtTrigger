@@ -1,5 +1,5 @@
 // ADC_ExternalTrigger.c - Triggers the ADC on external GPIO Interrupt
-// Most original code left as is, new added explained with comments
+// Most original code left as is, new code prefixed with comment "New code"
 
 
 // Derived from ADCSWTrigger.c
@@ -37,29 +37,61 @@
 // Sequencer 1 priority: 2nd
 // Sequencer 2 priority: 3rd
 // Sequencer 3 priority: 4th (lowest)
-// SS3 triggering event: software trigger
+// SS3 triggering event: software trigger   **** Changed to external trigger ****
 // SS3 1st sample source: Ain1 (PE2)
 // SS3 interrupts: flag set on completion but no interrupt requested
-void ADC0_InitSWTriggerSeq3_Ch1(void){ volatile unsigned long delay;
-  SYSCTL_RCGC2_R |= 0x00000010;   // 1) activate clock for Port E
+
+
+void ADC0_InitExtTriggerSeq3_Ch1(void){ volatile unsigned long delay;
+  
+	SYSCTL_RCGC2_R |= 0x00000010;   // 1) activate clock for Port E
   delay = SYSCTL_RCGC2_R;         //    allow time for clock to stabilize
   GPIO_PORTE_DIR_R &= ~0x04;      // 2) make PE2 input
-  GPIO_PORTE_AFSEL_R |= 0x04;     // 3) enable alternate function on PE2
-  GPIO_PORTE_DEN_R &= ~0x04;      // 4) disable digital I/O on PE2
+	
+	// New code
+	GPIO_PORTE_DIR_R &= ~0x02;			// *** 2.1 Make PE1 as input - should eventually be merged with above line
+  
+	GPIO_PORTE_AFSEL_R |= 0x04;     // 3) enable alternate function on PE2
+	
+	// New code 
+	GPIO_PORTE_AFSEL_R |= 0x02;   	// 3.1 Enable alternate function on PE1
+	
+	GPIO_PORTE_DEN_R &= ~0x04;      // 4) disable digital I/O on PE2
+	
+	// New code
+	GPIO_PORTE_DEN_R |= 0x02; 			// 4.1 Enable digital I/O on PE1
+	
   GPIO_PORTE_AMSEL_R |= 0x04;     // 5) enable analog function on PE2
+	
+	// New code 
+	GPIO_PORTE_AMSEL_R  &=  ~0x02;  // 5.1 Disable analog function on PE1
+	
+	// New code
+	GPIO_PORTE_ADCCTL_R |= 0x02;    // GPIO Configuration to enable pin PE1 to trigger ADC
+	
+	// New code 
+	GPIO_PORTE_IM_R |= 0x02;  			// GPIO Configuration to make PE1 as a non-masked interrupt
+	
+	
+	
   SYSCTL_RCGC0_R |= 0x00010000;   // 6) activate ADC0 
   delay = SYSCTL_RCGC2_R;         
   SYSCTL_RCGC0_R &= ~0x00000300;  // 7) configure for 125K 
-  ADC0_SSPRI_R = 0x0123;          // 8) Sequencer 3 is highest priority
+  
+	ADC0_SSPRI_R = 0x0123;          // 8) Sequencer 3 is highest priority
   ADC0_ACTSS_R &= ~0x0008;        // 9) disable sample sequencer 3
-  ADC0_EMUX_R &= ~0xF000;         // 10) seq3 is software trigger // Change this to  0x4 in place of 0 for GPIO External trigger
+  
+	// Old code - software trigger
+	// ADC0_EMUX_R &= ~0xF000;         // 10) seq3 is software trigger // Change this to  0x4 in place of 0 for GPIO External trigger
+	
+	// New code 
+	ADC0_EMUX_R |= 0x4000;           // External GPIO Trigger
+	
   ADC0_SSMUX3_R = (ADC0_SSMUX3_R&0xFFFFFFF0)+1; // 11) channel Ain1 (PE2)
   ADC0_SSCTL3_R = 0x0006;         // 12) no TS0 D0, yes IE0 END0
   ADC0_ACTSS_R |= 0x0008;         // 13) enable sample sequencer 3
+
 }
-
-
-
 
 
 
@@ -75,5 +107,6 @@ unsigned long ADC0_InSeq3(void){
   ADC0_ISC_R = 0x0008;             // 4) acknowledge completion
   return result;
 }
+
 
 
