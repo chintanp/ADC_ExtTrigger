@@ -1,0 +1,14 @@
+Dependencies for Project 'ADC_ExternalTrigger', Target 'ADC_ExternalTrigger': (DO NOT MODIFY !)
+F (.\startup.s)(0x519AFA96)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
+F (.\ADC_ExternalTrigger.c)(0x557BBE86)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections -I.. -I..\..\..-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\adc_externaltrigger.o --omf_browse .\adc_externaltrigger.crf --depend .\adc_externaltrigger.d)
+I (tm4c123gh6pm.h)(0x51D4154A)
+F (.\ADC_MainUART.c)(0x557BBF73)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections -I.. -I..\..\..-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\adc_mainuart.o --omf_browse .\adc_mainuart.crf --depend .\adc_mainuart.d)
+I (ADCSWTrigger.h)(0x5263A58E)
+I (tm4c123gh6pm.h)(0x51D4154A)
+I (PLL.h)(0x5263521E)
+I (UART.h)(0x553E573B)
+F (.\PLL.c)(0x5263521E)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections -I.. -I..\..\..-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\pll.o --omf_browse .\pll.crf --depend .\pll.d)
+I (PLL.h)(0x5263521E)
+F (.\UART.c)(0x554DDF61)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections -I.. -I..\..\..-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\uart.o --omf_browse .\uart.crf --depend .\uart.d)
+I (tm4c123gh6pm.h)(0x51D4154A)
+I (UART.h)(0x553E573B)
